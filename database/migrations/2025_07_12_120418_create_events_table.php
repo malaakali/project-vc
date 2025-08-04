@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('event_type')->nullable()->comment('theme_park, beach, etc.');
             $table->string('location')->nullable();
             $table->timestamp('start_datetime');
-            $table->timestamp('end_datetime');
+            $table->timestamp('end_datetime')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('max_participants')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->timestamps();

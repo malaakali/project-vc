@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ferry_schedules', function (Blueprint $table) {
             $table->id();
             $table->timestamp('departure_time');
-            $table->timestamp('arrival_time');
+            $table->timestamp('arrival_time')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('capacity');
             $table->decimal('price_per_ticket', 10, 2);
             $table->boolean('is_active')->default(true);
