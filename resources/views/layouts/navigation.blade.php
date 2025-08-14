@@ -15,6 +15,15 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('ferry.index')" :active="request()->routeIs('ferry.*')">
+                        {{ __('Ferry Tickets') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('ferry-schedules.index')" :active="request()->routeIs('ferry-schedules.*')">
+                        {{ __('Schedules') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.*')">
+                        {{ __('My Bookings') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -69,6 +78,15 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('ferry.index')" :active="request()->routeIs('ferry.*')">
+                {{ __('Ferry Tickets') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('ferry-schedules.index')" :active="request()->routeIs('ferry-schedules.*')">
+                {{ __('Schedules') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.*')">
+                {{ __('My Bookings') }}
             </x-responsive-nav-link>
         </div>
 
