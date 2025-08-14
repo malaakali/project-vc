@@ -1,5 +1,5 @@
 <x-app-layout>
-<div class="relative min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 overflow-hidden">
+<div class="relative min-h-screen bg-gradient-to-b from-blue-900 to-blue-950 overflow-hidden">
     <!-- Waves Background -->
     <div class="absolute inset-0 z-0">
         <svg class="absolute bottom-0 w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -13,25 +13,25 @@
     <div class="relative z-10 container mx-auto px-4 py-12">
         <!-- Header Section -->
         <div class="text-center py-16 md:py-24">
-            <h1 class="text-5xl md:text-7xl font-bold text-blue-900 mb-6 animate-fade-in">
-                Welcome to <span class="text-blue-600">Pompy Island</span>
+            <h1 class="text-5xl md:text-7xl font-bold text-blue-100 mb-6 animate-fade-in">
+                Welcome to <span class="text-blue-300">Pompy Island</span>
             </h1>
-            <p class="text-xl md:text-2xl text-blue-800 max-w-3xl mx-auto mb-10">
+            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10">
                 Your gateway to paradise - Book your ferry tickets to Pompy Island Resort
             </p>
-            
+
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <x-bladewind::button 
-                    size="big" 
-                    class="bg-blue-600 hover:bg-blue-700"
+                <x-bladewind::button
+                    size="big"
+                    class="bg-blue-300 hover:bg-blue-200"
                     onclick="window.location='{{ route('ferry.index') }}'"
                 >
                     Book Ferry Tickets
                 </x-bladewind::button>
-                <x-bladewind::button 
-                    size="big" 
+                <x-bladewind::button
+                    size="big"
                     type="secondary"
-                    class="border-blue-600 text-blue-600 hover:bg-blue-50"
+                    class="border-blue-300 text-blue-300 hover:bg-blue-900"
                     onclick="window.location='{{ route('ferry-schedules.index') }}'"
                 >
                     View Schedules
@@ -41,10 +41,10 @@
 
         <!-- Features Section -->
         <div class="py-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-100 mb-16">
                 Why Travel with Pompy Ferries?
             </h2>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
                 <x-bladewind::card class="animate-fade-in p-6">
@@ -102,24 +102,24 @@
         <!-- CTA Section -->
         <div class="py-16 text-center">
             <div class="max-w-3xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-blue-900 mb-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-blue-100 mb-6">
                     Ready for Your Island Getaway?
                 </h2>
-                <p class="text-xl text-blue-800 mb-10">
+                <p class="text-xl text-blue-200 mb-10">
                     Book your ferry tickets now and start your vacation at Pompy Island Resort.
                 </p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <x-bladewind::button 
-                        size="big" 
-                        class="bg-blue-600 hover:bg-blue-700"
+                    <x-bladewind::button
+                        size="big"
+                        class="bg-blue-300 hover:bg-blue-200"
                         onclick="window.location='{{ route('ferry.create') }}'"
                     >
                         Book Now
                     </x-bladewind::button>
-                    <x-bladewind::button 
-                        size="big" 
+                    <x-bladewind::button
+                        size="big"
                         type="secondary"
-                        class="border-blue-600 text-blue-600 hover:bg-blue-50"
+                        class="border-blue-300 text-blue-300 hover:bg-blue-900"
                         onclick="window.location='{{ route('events.index') }}'"
                     >
                         Island Events

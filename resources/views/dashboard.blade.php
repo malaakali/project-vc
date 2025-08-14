@@ -9,10 +9,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-2xl font-semibold mb-6">Welcome to Your Pompy Island Dashboard</h3>
-                    <p class="mb-6">Manage your ferry bookings, accommodation reservations, and island activities all in one place.</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+{{--                    <h3 class="text-2xl font-semibold mb-6">Welcome to Your Pompy Island Dashboard</h3>--}}
+{{--                    <p class="mb-6">Manage your ferry bookings, accommodation reservations, and island activities all in one place.</p>--}}
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <a href="{{ route('ferry.index') }}" class="bg-blue-50 dark:bg-blue-900/50 p-6 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition">
                             <div class="flex items-center">
                                 <svg class="h-8 w-8 text-blue-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -22,7 +22,7 @@
                             </div>
                             <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">View and manage your ferry bookings to Pompy Island</p>
                         </a>
-                        
+
                         <a href="{{ route('bookings.index') }}" class="bg-green-50 dark:bg-green-900/50 p-6 rounded-lg hover:bg-green-100 dark:hover:bg-green-800 transition">
                             <div class="flex items-center">
                                 <svg class="h-8 w-8 text-green-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,7 +32,7 @@
                             </div>
                             <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Manage all your reservations and bookings</p>
                         </a>
-                        
+
                         <a href="{{ route('rooms.index') }}" class="bg-purple-50 dark:bg-purple-900/50 p-6 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800 transition">
                             <div class="flex items-center">
                                 <svg class="h-8 w-8 text-purple-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,7 +43,7 @@
                             <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">View and manage your room reservations</p>
                         </a>
                     </div>
-                    
+
                     <div class="mt-8">
                         <h4 class="text-xl font-medium mb-4">Quick Actions</h4>
                         <div class="flex flex-wrap gap-4">
