@@ -20,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_number',
+        'user_type',
     ];
 
     /**
@@ -43,5 +45,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->user_type === 'admin';
+    }
+
+    public function getIsGuestAttribute(): bool
+    {
+        return $this->user_type === 'guest';
+    }
+
+    public function getIsTicketOfficerAttribute(): bool
+    {
+        return $this->user_type === 'ticket_officer';
+    }
+
+    public function getIsReceptionistAttribute(): bool
+    {
+        return $this->user_type === 'receptionist';
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -14,8 +15,11 @@ class BookingController extends Controller
      */
     public function index(): View
     {
-        $bookings = Booking::where('user_id', auth()->id())->get();
-        
+        $bookings = Booking::where('user_id', auth()->id())
+            ->with(['room'])
+            ->orderBy('check_in_date', 'desc')
+            ->get();
+
         return view('bookings.index', compact('bookings'));
     }
 
@@ -24,7 +28,8 @@ class BookingController extends Controller
      */
     public function create(): View
     {
-        return view('bookings.create');
+        $rooms = Room::where('is_available', true)->get();
+        return view('bookings.create', compact('rooms'));
     }
 
     /**
@@ -33,17 +38,29 @@ class BookingController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'ferry_id' => 'required|exists:ferries,id',
-            'date' => 'required|date|after:today',
-            'passengers' => 'required|integer|min:1|max:10',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in_date' => 'required|date|after:today',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'number_of_guests' => 'required|integer|min:1|max:10',
         ]);
 
-        Booking::create([
+        $room = Room::findOrFail($request->room_id);
+
+        // Calculate total price
+        $checkIn = \Carbon\Carbon::parse($request->check_in_date);
+        $checkOut = \Carbon\Carbon::parse($request->check_out_date);
+        $nights = $checkOut->diffInDays($checkIn);
+        $totalPrice = $nights * $room->price_per_night;
+
+        $booking = Booking::create([
             'user_id' => auth()->id(),
-            'ferry_id' => $request->ferry_id,
-            'date' => $request->date,
-            'passengers' => $request->passengers,
+            'room_id' => $request->room_id,
+            'check_in_date' => $request->check_in_date,
+            'check_out_date' => $request->check_out_date,
+            'number_of_guests' => $request->number_of_guests,
+            'total_price' => $totalPrice,
             'status' => 'confirmed',
+            'confirmation_code' => 'BK-' . strtoupper(uniqid()),
         ]);
 
         return redirect()->route('bookings.index')->with('status', 'booking-created');
@@ -55,7 +72,9 @@ class BookingController extends Controller
     public function show(Booking $booking): View
     {
         $this->authorize('view', $booking);
-        
+
+        $booking->load(['room']);
+
         return view('bookings.show', compact('booking'));
     }
 
@@ -65,8 +84,11 @@ class BookingController extends Controller
     public function edit(Booking $booking): View
     {
         $this->authorize('update', $booking);
-        
-        return view('bookings.edit', compact('booking'));
+
+        $rooms = Room::where('is_available', true)->get();
+        $booking->load(['room']);
+
+        return view('bookings.edit', compact('booking', 'rooms'));
     }
 
     /**
@@ -75,13 +97,29 @@ class BookingController extends Controller
     public function update(Request $request, Booking $booking): RedirectResponse
     {
         $this->authorize('update', $booking);
-        
+
         $request->validate([
-            'date' => 'required|date|after:today',
-            'passengers' => 'required|integer|min:1|max:10',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in_date' => 'required|date|after:today',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'number_of_guests' => 'required|integer|min:1|max:10',
         ]);
 
-        $booking->update($request->only(['date', 'passengers']));
+        $room = Room::findOrFail($request->room_id);
+
+        // Calculate total price
+        $checkIn = \Carbon\Carbon::parse($request->check_in_date);
+        $checkOut = \Carbon\Carbon::parse($request->check_out_date);
+        $nights = $checkOut->diffInDays($checkIn);
+        $totalPrice = $nights * $room->price_per_night;
+
+        $booking->update([
+            'room_id' => $request->room_id,
+            'check_in_date' => $request->check_in_date,
+            'check_out_date' => $request->check_out_date,
+            'number_of_guests' => $request->number_of_guests,
+            'total_price' => $totalPrice,
+        ]);
 
         return redirect()->route('bookings.index')->with('status', 'booking-updated');
     }
@@ -92,7 +130,7 @@ class BookingController extends Controller
     public function destroy(Booking $booking): RedirectResponse
     {
         $this->authorize('delete', $booking);
-        
+
         $booking->delete();
 
         return redirect()->route('bookings.index')->with('status', 'booking-deleted');

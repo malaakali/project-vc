@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventTicket;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,10 @@ class EventTicketController extends Controller
      */
     public function index(): View
     {
-        $eventTickets = EventTicket::where('user_id', auth()->id())->with('event')->get();
+        $eventTickets = EventTicket::where('user_id', auth()->id())
+            ->with(['event'])
+            ->orderBy('visit_date', 'desc')
+            ->get();
         
         return view('event-tickets.index', compact('eventTickets'));
     }
@@ -25,7 +29,14 @@ class EventTicketController extends Controller
     public function create(Request $request): View
     {
         $eventId = $request->query('event_id');
-        return view('event-tickets.create', compact('eventId'));
+        $event = $eventId ? Event::findOrFail($eventId) : null;
+        
+        // Get upcoming events
+        $events = Event::where('start_datetime', '>=', now())
+            ->orderBy('start_datetime')
+            ->get();
+        
+        return view('event-tickets.create', compact('eventId', 'event', 'events'));
     }
 
     /**
@@ -35,14 +46,26 @@ class EventTicketController extends Controller
     {
         $request->validate([
             'event_id' => 'required|exists:events,id',
-            'quantity' => 'required|integer|min:1',
+            'visit_date' => 'required|date|after:today',
+            'quantity' => 'required|integer|min:1|max:10',
         ]);
-
-        EventTicket::create([
+        
+        // Verify that the event exists
+        $event = Event::findOrFail($request->event_id);
+        
+        // Calculate total price
+        $totalPrice = $event->price * $request->quantity;
+        
+        // Create the event ticket
+        $eventTicket = EventTicket::create([
             'user_id' => auth()->id(),
             'event_id' => $request->event_id,
+            'purchase_date' => now(),
+            'visit_date' => $request->visit_date,
             'quantity' => $request->quantity,
-            'status' => 'confirmed',
+            'total_price' => $totalPrice,
+            'status' => 'active',
+            'confirmation_code' => 'ET-' . strtoupper(uniqid()),
         ]);
 
         return redirect()->route('event-tickets.index')->with('status', 'ticket-created');
@@ -55,6 +78,8 @@ class EventTicketController extends Controller
     {
         $this->authorize('view', $eventTicket);
         
+        $eventTicket->load(['event']);
+        
         return view('event-tickets.show', compact('eventTicket'));
     }
 
@@ -64,6 +89,8 @@ class EventTicketController extends Controller
     public function edit(EventTicket $eventTicket): View
     {
         $this->authorize('update', $eventTicket);
+        
+        $eventTicket->load(['event']);
         
         return view('event-tickets.edit', compact('eventTicket'));
     }
@@ -76,10 +103,18 @@ class EventTicketController extends Controller
         $this->authorize('update', $eventTicket);
         
         $request->validate([
-            'quantity' => 'required|integer|min:1',
+            'visit_date' => 'required|date|after:today',
+            'quantity' => 'required|integer|min:1|max:10',
         ]);
-
-        $eventTicket->update($request->only(['quantity']));
+        
+        // Calculate total price
+        $totalPrice = $eventTicket->event->price * $request->quantity;
+        
+        $eventTicket->update([
+            'visit_date' => $request->visit_date,
+            'quantity' => $request->quantity,
+            'total_price' => $totalPrice,
+        ]);
 
         return redirect()->route('event-tickets.index')->with('status', 'ticket-updated');
     }
