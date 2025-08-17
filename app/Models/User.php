@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -45,6 +46,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the bookings for the user.
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get the event tickets for the user.
+     */
+    public function eventTickets(): HasMany
+    {
+        return $this->hasMany(EventTicket::class);
+    }
+
+    /**
+     * Get the ferry tickets for the user.
+     */
+    public function ferryTickets(): HasMany
+    {
+        return $this->hasMany(FerryTicket::class);
     }
 
     public function getIsAdminAttribute(): bool

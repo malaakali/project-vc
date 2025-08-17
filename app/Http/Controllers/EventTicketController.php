@@ -53,6 +53,16 @@ class EventTicketController extends Controller
         // Verify that the event exists
         $event = Event::findOrFail($request->event_id);
         
+        // Check if event has available capacity
+        $currentParticipants = $event->eventTickets()
+            ->where('visit_date', $request->visit_date)
+            ->where('status', 'active')
+            ->sum('quantity');
+            
+        if ($event->max_participants && ($currentParticipants + $request->quantity) > $event->max_participants) {
+            return back()->withInput()->withErrors(['quantity' => 'Not enough capacity available for this event on the selected date.']);
+        }
+        
         // Calculate total price
         $totalPrice = $event->price * $request->quantity;
         

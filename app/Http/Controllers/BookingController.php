@@ -29,7 +29,13 @@ class BookingController extends Controller
     public function create(): View
     {
         $rooms = Room::where('is_available', true)->get();
-        return view('bookings.create', compact('rooms'));
+        $selectedRoom = null;
+        
+        if (request('room_id')) {
+            $selectedRoom = Room::findOrFail(request('room_id'));
+        }
+        
+        return view('bookings.create', compact('rooms', 'selectedRoom'));
     }
 
     /**
@@ -45,6 +51,16 @@ class BookingController extends Controller
         ]);
 
         $room = Room::findOrFail($request->room_id);
+
+        // Check if room is available for the selected dates
+        if (!$room->isAvailableForDates($request->check_in_date, $request->check_out_date)) {
+            return back()->withInput()->withErrors(['room_id' => 'This room is not available for the selected dates.']);
+        }
+
+        // Check if number of guests exceeds room capacity
+        if ($request->number_of_guests > $room->max_occupancy) {
+            return back()->withInput()->withErrors(['number_of_guests' => 'Number of guests exceeds room capacity.']);
+        }
 
         // Calculate total price
         $checkIn = \Carbon\Carbon::parse($request->check_in_date);

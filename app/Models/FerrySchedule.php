@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class FerrySchedule extends Model
 {
@@ -42,11 +43,6 @@ class FerrySchedule extends Model
         'recurrence_end_date' => 'date',
         'days_of_week' => 'array',
     ];
-
-    public static function create(array $all)
-    {
-        return new FerrySchedule($all);
-    }
 
     /**
      * Get the ferry tickets for this schedule.
@@ -123,7 +119,7 @@ class FerrySchedule extends Model
             $arrivalTime = $this->arrival_time->copy()->addDays($currentDate->diffInDays($startDate));
 
             // Create the recurring schedule
-            static::create([
+            FerrySchedule::create([
                 'ferry_name' => $this->ferry_name,
                 'departure_time' => $currentDate->toDateTimeString(),
                 'arrival_time' => $arrivalTime->toDateTimeString(),
@@ -135,5 +131,18 @@ class FerrySchedule extends Model
 
             $count++;
         }
+    }
+
+    /**
+     * Check if the schedule has available capacity for the given number of passengers.
+     */
+    public function hasAvailableCapacity(int $numberOfPassengers): bool
+    {
+        $bookedPassengers = $this->ferryTickets()
+            ->where('departure_date', $this->departure_time->toDateString())
+            ->where('status', 'active')
+            ->sum('number_of_passengers');
+
+        return ($this->capacity - $bookedPassengers) >= $numberOfPassengers;
     }
 }

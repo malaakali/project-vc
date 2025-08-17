@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Booking extends Model
 {
@@ -36,6 +37,17 @@ class Booking extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<string, string>
+     */
+    protected $dates = [
+        'check_in_date',
+        'check_out_date',
+        'booking_date',
+    ];
+
+    /**
      * Get the user that owns the booking.
      */
     public function user(): BelongsTo
@@ -49,5 +61,22 @@ class Booking extends Model
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
+    }
+
+    /**
+     * Get the ferry tickets associated with the booking.
+     */
+    public function ferryTickets(): HasMany
+    {
+        return $this->hasMany(FerryTicket::class);
+    }
+
+    /**
+     * Check if the booking is active (for ferry ticket eligibility).
+     */
+    public function isActive(): bool
+    {
+        return $this->status === 'confirmed' && 
+               $this->check_in_date >= now()->toDateString();
     }
 }

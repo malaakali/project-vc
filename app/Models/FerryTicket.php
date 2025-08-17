@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FerryTicket extends Model
 {
@@ -37,6 +38,16 @@ class FerryTicket extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<string, string>
+     */
+    protected $dates = [
+        'purchase_date',
+        'departure_date',
+    ];
+
+    /**
      * Get the user that owns the ferry ticket.
      */
     public function user(): BelongsTo
@@ -58,5 +69,23 @@ class FerryTicket extends Model
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);
+    }
+
+    /**
+     * Get the event tickets associated with the ferry ticket.
+     */
+    public function eventTickets(): HasMany
+    {
+        return $this->hasMany(EventTicket::class);
+    }
+
+    /**
+     * Check if the ferry ticket is eligible for cancellation.
+     */
+    public function isEligibleForCancellation(): bool
+    {
+        // Assuming tickets can be cancelled up to 24 hours before departure
+        return $this->departure_date > now()->addDay() && 
+               $this->status === 'active';
     }
 }

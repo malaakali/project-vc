@@ -36,6 +36,16 @@ class EventTicket extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<string, string>
+     */
+    protected $dates = [
+        'purchase_date',
+        'visit_date',
+    ];
+
+    /**
      * Get the user that owns the event ticket.
      */
     public function user(): BelongsTo
@@ -49,5 +59,23 @@ class EventTicket extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    /**
+     * Check if the event ticket is eligible for cancellation.
+     */
+    public function isEligibleForCancellation(): bool
+    {
+        // Assuming tickets can be cancelled up to 24 hours before the event
+        return $this->visit_date > now()->addDay() && 
+               $this->status === 'active';
+    }
+
+    /**
+     * Get the total number of participants for this ticket.
+     */
+    public function getParticipantCount(): int
+    {
+        return $this->quantity;
     }
 }

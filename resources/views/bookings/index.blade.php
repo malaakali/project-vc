@@ -179,7 +179,7 @@
 
                                 <!-- Actions -->
                                 <div class="mt-6 flex flex-wrap gap-2">
-                                    @if(auth()->user())
+                                    @if(auth()->hasUser() && auth()->user()->is_admin)
                                         <a href="{{ route('bookings.show', $booking) }}" class="flex-1 bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/40 text-orange-700 dark:text-orange-300 font-medium py-2 px-4 rounded-lg transition-colors text-center text-sm">
                                             <svg class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -187,7 +187,6 @@
                                             </svg>
                                             View
                                         </a>
-                                        @if(auth()->user()->id === $booking->user_id || auth()->user()->is_admin)
                                             <a href="{{ route('bookings.edit', $booking) }}" class="flex-1 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/20 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-medium py-2 px-4 rounded-lg transition-colors text-center text-sm">
                                                 <svg class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -204,11 +203,6 @@
                                                     Cancel
                                                 </button>
                                             </form>
-                                        @endif
-                                    @else
-                                        <div class="w-full text-center text-gray-500 dark:text-gray-400 text-sm py-2">
-                                            Login to manage your bookings
-                                        </div>
                                     @endif
                                 </div>
                             </div>

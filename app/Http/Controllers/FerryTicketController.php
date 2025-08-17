@@ -67,11 +67,21 @@ class FerryTicketController extends Controller
             ->where('user_id', auth()->id())
             ->firstOrFail();
             
+        // Verify that the booking is active (required for ferry ticket)
+        if (!$booking->isActive()) {
+            return back()->withInput()->withErrors(['booking_id' => 'The selected booking is not active or has already expired.']);
+        }
+            
         // Verify that the schedule exists and is active
         $schedule = FerrySchedule::where('id', $request->schedule_id)
             ->where('is_active', true)
             ->where('departure_time', '>', now())
             ->firstOrFail();
+            
+        // Check if schedule has available capacity
+        if (!$schedule->hasAvailableCapacity($request->number_of_passengers)) {
+            return back()->withInput()->withErrors(['number_of_passengers' => 'Not enough capacity available on this ferry for the requested number of passengers.']);
+        }
             
         // Calculate total price
         $totalPrice = $schedule->price_per_ticket * $request->number_of_passengers;

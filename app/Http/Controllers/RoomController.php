@@ -49,6 +49,7 @@ class RoomController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
+            'name' => 'required|string|max:255',
             'room_type' => 'required|string|max:255',
             'max_occupancy' => 'required|integer|min:1',
             'price_per_night' => 'required|numeric|min:0',
@@ -84,6 +85,7 @@ class RoomController extends Controller
     public function update(Request $request, Room $room): RedirectResponse
     {
         $request->validate([
+            'name' => 'required|string|max:255',
             'room_type' => 'required|string|max:255',
             'max_occupancy' => 'required|integer|min:1',
             'price_per_night' => 'required|numeric|min:0',

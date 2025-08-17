@@ -53,6 +53,52 @@
                                 <input type="hidden" name="room_id" value="{{ request('room_id') }}" />
                             @endif
 
+                            <!-- Selected Room Display -->
+                            @if($selectedRoom)
+                            <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700 rounded-xl p-6 mb-6">
+                                <h3 class="text-lg font-semibold text-green-800 dark:text-green-200 mb-4 flex items-center">
+                                    <div class="bg-green-100 dark:bg-green-800 rounded-lg p-2 mr-3">
+                                        <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    Selected Accommodation
+                                </h3>
+                                
+                                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-100 dark:border-green-700">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ $selectedRoom->name }}</h4>
+                                        <span class="bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-sm font-medium px-3 py-1 rounded-full">
+                                            {{ $selectedRoom->room_type }}
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="text-gray-600 dark:text-gray-400 mb-4">{{ $selectedRoom->description }}</p>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                        <div class="flex items-center text-gray-600 dark:text-gray-400">
+                                            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                            Max {{ $selectedRoom->max_occupancy }} guests
+                                        </div>
+                                        <div class="flex items-center text-gray-600 dark:text-gray-400">
+                                            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                            </svg>
+                                            ${{ number_format($selectedRoom->price_per_night, 2) }} per night
+                                        </div>
+                                        <div class="flex items-center text-green-600 dark:text-green-400">
+                                            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Available
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
                             <!-- Room Selection -->
                             @if(!request('room_id'))
                             <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
@@ -69,7 +115,11 @@
                                     <label for="room_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Choose Room</label>
                                     <select name="room_id" id="room_id" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-800 dark:text-gray-100 transition-colors" required>
                                         <option value="">Select a room</option>
-                                        <!-- Room options would be populated from the controller -->
+                                        @foreach($rooms as $room)
+                                            <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
+                                                {{ $room->name }} - {{ $room->room_type }} (${{ number_format($room->price_per_night, 2) }}/night)
+                                            </option>
+                                        @endforeach
                                     </select>
                                     <x-input-error :messages="$errors->get('room_id')" class="mt-2" />
                                 </div>
