@@ -1,8 +1,8 @@
 <x-guest-layout>
-    <div class="bg-gradient-to-br from-blue-50 to-cyan-100 p-8 rounded-lg shadow-lg">
+    <div class="bg-gradient-to-br from-blue-50 to-cyan-100 dark:from-gray-800 dark:to-gray-700 p-8 rounded-lg shadow-lg border dark:border-gray-600">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-900">Confirm Password</h1>
-            <p class="text-blue-700 mt-2">This is a secure area. Please confirm your password before continuing.</p>
+            <h1 class="text-3xl font-bold text-blue-900 dark:text-white">Confirm Password</h1>
+            <p class="text-blue-700 dark:text-gray-300 mt-2">This is a secure area. Please confirm your password before continuing.</p>
         </div>
         
         <form method="POST" action="{{ route('password.confirm') }}">
@@ -10,9 +10,9 @@
 
             <!-- Password -->
             <div>
-                <x-input-label for="password" :value="__('Password')" class="text-blue-800 font-medium" />
+                <x-input-label for="password" :value="__('Password')" class="text-blue-800 dark:text-gray-200 font-medium" />
 
-                <x-text-input id="password" class="block mt-1 w-full border-blue-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
+                <x-text-input id="password" class="block mt-1 w-full border-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                                 type="password"
                                 name="password"
                                 required autocomplete="current-password" />

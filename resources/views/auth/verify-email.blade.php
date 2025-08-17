@@ -1,11 +1,11 @@
 <x-guest-layout>
-    <div class="bg-gradient-to-br from-blue-50 to-cyan-100 p-8 rounded-lg shadow-lg">
+    <div class="bg-gradient-to-br from-blue-50 to-cyan-100 dark:from-gray-800 dark:to-gray-700 p-8 rounded-lg shadow-lg border dark:border-gray-600">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-900">Verify Email Address</h1>
-            <p class="text-blue-700 mt-2">Thanks for signing up! Please verify your email address by clicking the link we just sent to you.</p>
+            <h1 class="text-3xl font-bold text-blue-900 dark:text-white">Verify Email Address</h1>
+            <p class="text-blue-700 dark:text-gray-300 mt-2">Thanks for signing up! Please verify your email address by clicking the link we just sent to you.</p>
         </div>
         
-        <div class="mb-4 text-sm text-blue-700">
+        <div class="mb-4 text-sm text-blue-700 dark:text-gray-300">
             {{ __('If you didn\'t receive the email, we will gladly send you another.') }}
         </div>
 
